@@ -5,6 +5,9 @@ import Typography from "@mui/material/Typography";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Todo from "./Todo";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 function ToDoList() {
   return (
@@ -30,6 +33,21 @@ function ToDoList() {
           {/* ToDos */}
           <Todo />
           {/* ToDos */}
+
+          {/* input + BUTTON */}
+          <Grid container spacing={2} style={{ marginTop: "20px" }}>
+            <Grid item xs={8}>
+              <TextField style={{ width: "100%" }}
+                id="outlined-basic"
+                label="New Task"
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <Button variant="contained" style={{ width: "100%",height:"100%" }}>Add Task</Button>
+            </Grid>
+          </Grid>
+          {/* input + BUTTON */}
         </CardContent>
       </Card>
     </Container>
