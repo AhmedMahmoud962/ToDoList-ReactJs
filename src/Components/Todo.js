@@ -7,7 +7,11 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-function Todo({ title, description, isCompleted }) {
+function Todo({ todo }) {
+  // const [isCompleted, setIsCompleted] = useState(todo.completed);
+  const handleCheckButton = () => {
+    alert("checked");
+  };
   return (
     <Card
       className="todoCard"
@@ -22,10 +26,10 @@ function Todo({ title, description, isCompleted }) {
         <Grid container spacing={2}>
           <Grid item xs={8}>
             <Typography variant="h5" sx={{ textAlign: "left" }}>
-              {title}
+              {todo.title}
             </Typography>
             <Typography variant="h6" sx={{ textAlign: "left" }}>
-              {description}
+              {todo.description}
             </Typography>
           </Grid>
           {/* Action buttons */}
@@ -36,7 +40,9 @@ function Todo({ title, description, isCompleted }) {
             justifyContent="space-around"
             alignItems="center"
           >
+            {/* Check button Action */}
             <IconButton
+              onClick={() => handleCheckButton()}
               className="iconButton"
               aria-label="check"
               style={{
@@ -47,6 +53,7 @@ function Todo({ title, description, isCompleted }) {
             >
               <CheckIcon />
             </IconButton>
+            {/* Check button Action */}
             <IconButton
               className="iconButton"
               aria-label="check"

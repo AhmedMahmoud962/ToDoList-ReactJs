@@ -48,7 +48,7 @@ function ToDoList() {
   };
 
   const todoJsx = todo.map((t) => {
-    return <Todo key={t.id} title={t.title} description={t.description} />;
+    return <Todo key={t.id} todo={t} />;
   });
   return (
     <Container maxWidth="sm">
