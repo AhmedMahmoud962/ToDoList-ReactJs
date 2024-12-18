@@ -8,10 +8,11 @@ import Todo from "./Todo";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { useState } from "react";
 // uuid
 import { v4 as uuidv4 } from "uuid";
 
-const todo = [
+const initialTodo = [
   {
     id: uuidv4(),
     title: "Task 1",
@@ -32,9 +33,23 @@ const todo = [
   },
 ];
 function ToDoList() {
-  const todoJsx=todo.map((t)=>{
-    return <Todo key={t.id} title={t.title} description={t.description}  />
-  })
+  const [todo, setTodo] = useState(initialTodo);
+  const [titleInput, setTitleInput] = useState("");
+
+  const handleAddClick = () => {
+    const newTodo = {
+      id: uuidv4(),
+      title: titleInput,
+      description: "",
+      isCompleted: false,
+    };
+    setTodo([...todo, newTodo]);
+    setTitleInput("");
+  };
+
+  const todoJsx = todo.map((t) => {
+    return <Todo key={t.id} title={t.title} description={t.description} />;
+  });
   return (
     <Container maxWidth="sm">
       <Card sx={{ minWidth: 275 }}>
@@ -67,12 +82,19 @@ function ToDoList() {
                 id="outlined-basic"
                 label="New Task"
                 variant="outlined"
+                value={titleInput}
+                onChange={(e) => {
+                  setTitleInput(e.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={4}>
               <Button
                 variant="contained"
                 style={{ width: "100%", height: "100%" }}
+                onClick={() => {
+                  handleAddClick();
+                }}
               >
                 Add Task
               </Button>
