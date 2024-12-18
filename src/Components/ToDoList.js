@@ -8,8 +8,33 @@ import Todo from "./Todo";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+// uuid
+import { v4 as uuidv4 } from "uuid";
 
+const todo = [
+  {
+    id: uuidv4(),
+    title: "Task 1",
+    description: "Task 1 Description",
+    isCompleted: false,
+  },
+  {
+    id: uuidv4(),
+    title: "Task 2",
+    description: "Task 2 Description",
+    isCompleted: false,
+  },
+  {
+    id: uuidv4(),
+    title: "Task 3",
+    description: "Task 3 Description",
+    isCompleted: false,
+  },
+];
 function ToDoList() {
+  const todoJsx=todo.map((t)=>{
+    return <Todo key={t.id} title={t.title} description={t.description}  />
+  })
   return (
     <Container maxWidth="sm">
       <Card sx={{ minWidth: 275 }}>
@@ -31,20 +56,26 @@ function ToDoList() {
           {/* filter buttons */}
 
           {/* ToDos */}
-          <Todo />
+          {todoJsx}
           {/* ToDos */}
 
           {/* input + BUTTON */}
           <Grid container spacing={2} style={{ marginTop: "20px" }}>
             <Grid item xs={8}>
-              <TextField style={{ width: "100%" }}
+              <TextField
+                style={{ width: "100%" }}
                 id="outlined-basic"
                 label="New Task"
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={4}>
-              <Button variant="contained" style={{ width: "100%",height:"100%" }}>Add Task</Button>
+              <Button
+                variant="contained"
+                style={{ width: "100%", height: "100%" }}
+              >
+                Add Task
+              </Button>
             </Grid>
           </Grid>
           {/* input + BUTTON */}

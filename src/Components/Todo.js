@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-function Todo() {
+function Todo({ title, description, isCompleted }) {
   return (
     <Card
       className="todoCard"
@@ -22,10 +22,10 @@ function Todo() {
         <Grid container spacing={2}>
           <Grid item xs={8}>
             <Typography variant="h5" sx={{ textAlign: "left" }}>
-              task 1
+              {title}
             </Typography>
             <Typography variant="h6" sx={{ textAlign: "left" }}>
-              Details about the task
+              {description}
             </Typography>
           </Grid>
           {/* Action buttons */}
