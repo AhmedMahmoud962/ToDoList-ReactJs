@@ -36,6 +36,17 @@ function ToDoList() {
   const [todo, setTodo] = useState(initialTodo);
   const [titleInput, setTitleInput] = useState("");
 
+  // handel check
+  const handleCheckButton = (id) => {
+    // every todo has a id and i check on id to know is completed or not
+    const updatedTodos = todo.map((t) => {
+      if (t.id === id) {
+        t.isCompleted = !t.isCompleted;
+      }
+      return t;
+    });
+    setTodo(updatedTodos);
+  };
   const handleAddClick = () => {
     const newTodo = {
       id: uuidv4(),
@@ -43,12 +54,13 @@ function ToDoList() {
       description: "",
       isCompleted: false,
     };
+    if (newTodo.title === "") return;
     setTodo([...todo, newTodo]);
     setTitleInput("");
   };
 
   const todoJsx = todo.map((t) => {
-    return <Todo key={t.id} todo={t} />;
+    return <Todo key={t.id} todo={t} handleCheck={handleCheckButton} />;
   });
   return (
     <Container maxWidth="sm">

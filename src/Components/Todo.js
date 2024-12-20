@@ -7,10 +7,10 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-function Todo({ todo }) {
+function Todo({ todo, handleCheck }) {
   // const [isCompleted, setIsCompleted] = useState(todo.completed);
   const handleCheckButton = () => {
-    alert("checked");
+    handleCheck(todo.id);
   };
   return (
     <Card
@@ -46,8 +46,8 @@ function Todo({ todo }) {
               className="iconButton"
               aria-label="check"
               style={{
-                color: "#8bc34a",
-                background: "white",
+                color: todo.isCompleted ? "white" : "#8bc34a",
+                background: todo.isCompleted ? "#8bc34a" : "white",
                 border: "2px solid #8bc34a",
               }}
             >
