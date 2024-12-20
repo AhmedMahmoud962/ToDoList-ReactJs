@@ -11,29 +11,11 @@ import Button from "@mui/material/Button";
 import { useState } from "react";
 // uuid
 import { v4 as uuidv4 } from "uuid";
+import { useContext } from "react";
+import { TodoContext } from "../Context/TodoContext";
 
-const initialTodo = [
-  {
-    id: uuidv4(),
-    title: "Task 1",
-    description: "Task 1 Description",
-    isCompleted: false,
-  },
-  {
-    id: uuidv4(),
-    title: "Task 2",
-    description: "Task 2 Description",
-    isCompleted: false,
-  },
-  {
-    id: uuidv4(),
-    title: "Task 3",
-    description: "Task 3 Description",
-    isCompleted: false,
-  },
-];
 function ToDoList() {
-  const [todo, setTodo] = useState(initialTodo);
+  const { todo, setTodo } = useContext(TodoContext);
   const [titleInput, setTitleInput] = useState("");
 
   // handel check
