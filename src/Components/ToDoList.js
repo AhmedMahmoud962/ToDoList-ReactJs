@@ -18,17 +18,6 @@ function ToDoList() {
   const { todo, setTodo } = useContext(TodoContext);
   const [titleInput, setTitleInput] = useState("");
 
-  // handel check
-  const handleCheckButton = (id) => {
-    // every todo has a id and i check on id to know is completed or not
-    const updatedTodos = todo.map((t) => {
-      if (t.id === id) {
-        t.isCompleted = !t.isCompleted;
-      }
-      return t;
-    });
-    setTodo(updatedTodos);
-  };
   const handleAddClick = () => {
     const newTodo = {
       id: uuidv4(),
@@ -42,7 +31,7 @@ function ToDoList() {
   };
 
   const todoJsx = todo.map((t) => {
-    return <Todo key={t.id} todo={t} handleCheck={handleCheckButton} />;
+    return <Todo key={t.id} todoItem={t}  />;
   });
   return (
     <Container maxWidth="sm">

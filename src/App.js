@@ -27,6 +27,8 @@ function App() {
   const [todo, setTodo] = useState(initialTodo);
   return (
     <div className="App">
+      {/* <TodoContext.Provider value={{ todo: todo, setTodo: setTodo }}> */}
+      {/* If the will named as "todo" and "setTodo" then we can use like this  */}
       <TodoContext.Provider value={{ todo, setTodo }}>
         <ToDoList />
       </TodoContext.Provider>
