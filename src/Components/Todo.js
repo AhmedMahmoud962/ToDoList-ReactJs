@@ -21,8 +21,8 @@ function Todo({ todoItem }) {
         t.isCompleted = !t.isCompleted;
         toast.success(
           t.isCompleted
-            ? `${t.title} Task marked as completed!`
-            : `${t.title} Task not complete!`
+            ? ` Task marked as completed!`
+            : ` Task not complete!`
         );
       }
       return t;
