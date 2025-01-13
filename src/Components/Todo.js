@@ -17,14 +17,19 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
+import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 function Todo({ todoItem }) {
   const { todo, setTodo } = useContext(TodoContext);
   const [showDeleteModel, setShowDeleteModel] = useState(false);
+  const [showUpdateModel, setShowUpdateModel] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(todoItem.title);
+  const [editedDescription, setEditedDescription] = useState(
+    todoItem.description
+  );
 
-  // Event Handleres 
-  // Handle check
+  // Event Handlers
   const handleCheckButton = () => {
     const updatedTodos = todo.map((t) => {
       if (t.id === todoItem.id) {
@@ -37,44 +42,129 @@ function Todo({ todoItem }) {
     });
     setTodo(updatedTodos);
   };
-  // Event Handleres 
+
   const HandleDeleteButton = () => {
     setShowDeleteModel(true);
-  }
-  const handleClose = () => {
-    setShowDeleteModel(false);
-  }
+  };
 
-  // Confirm Delete
+  const handleDeleteDialogClose = () => {
+    setShowDeleteModel(false);
+  };
+
+  const handleUpdateDialogClose = () => {
+    setShowUpdateModel(false);
+  };
+
   const HandleDeleteConfirm = () => {
     setShowDeleteModel(false);
-    const updatedTodos = todo.filter((t) => t.id !== todoItem.id );
+    const updatedTodos = todo.filter((t) => t.id !== todoItem.id);
+    if (updatedTodos.length === todo.length) {
+      toast.error("Task not deleted!");
+    } else {
+      toast.success("Task deleted successfully!");
+      setTodo(updatedTodos);
+    }
+  };
+
+  const handleEditButton = () => {
+    setEditedTitle(todoItem.title);
+    setEditedDescription(todoItem.description);
+    setShowUpdateModel(true);
+  };
+
+  const handleUpdateConfirm = () => {
+    if (!editedTitle.trim() || !editedDescription.trim()) {
+      toast.error("Both title and description are required!");
+      return;
+    }
+
+    const updatedTodos = todo.map((t) => {
+      if (t.id === todoItem.id) {
+        return {
+          ...t,
+          title: editedTitle.trim(),
+          description: editedDescription.trim(),
+        };
+      }
+      return t;
+    });
+
     setTodo(updatedTodos);
-  }
-  // Handle Function calls
+    setShowUpdateModel(false);
+    toast.success("Task updated successfully!");
+  };
+
   return (
     <>
-      {/* Model Delete */}
+      {/* Delete Dialog */}
       <Dialog
         open={showDeleteModel}
-        onClose={handleClose} // for close model when click in any place in document
+        onClose={handleDeleteDialogClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Are you sure you want to delete this task ?"}
+          {"Are you sure you want to delete this task?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            You can't undo this action unless you have permission to do so and have the required permissions to do so.
+            You can't undo this action.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>No</Button>
-          <Button style={{ color: "red" }} autoFocus onClick={HandleDeleteConfirm}>Yes</Button>
+          <Button onClick={handleDeleteDialogClose}>No</Button>
+          <Button
+            style={{ color: "red" }}
+            onClick={HandleDeleteConfirm}
+            autoFocus
+          >
+            Yes, Delete it
+          </Button>
         </DialogActions>
       </Dialog>
-      {/* Model Delete */}
+
+      {/* Update Dialog */}
+      <Dialog
+        open={showUpdateModel}
+        onClose={handleUpdateDialogClose}
+        aria-labelledby="edit-dialog-title"
+        aria-describedby="edit-dialog-description"
+      >
+        <DialogTitle id="edit-dialog-title">Edit Task</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="title"
+            label="Task Title"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+          />
+          <TextField
+            required
+            margin="dense"
+            id="description"
+            label="Task Description"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={editedDescription}
+            onChange={(e) => setEditedDescription(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUpdateDialogClose}>Cancel</Button>
+          <Button onClick={handleUpdateConfirm} autoFocus>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Task Card */}
       <Card
         className="todoCard"
         sx={{
@@ -114,6 +204,7 @@ function Todo({ todoItem }) {
                 <CheckIcon />
               </IconButton>
               <IconButton
+                onClick={handleEditButton}
                 className="iconButton"
                 aria-label="edit"
                 style={{
@@ -124,7 +215,6 @@ function Todo({ todoItem }) {
               >
                 <ModeEditOutlineOutlinedIcon />
               </IconButton>
-              {/*  Delete Button */}
               <IconButton
                 onClick={HandleDeleteButton}
                 className="iconButton"
@@ -137,7 +227,6 @@ function Todo({ todoItem }) {
               >
                 <DeleteOutlineOutlinedIcon />
               </IconButton>
-              {/*  Delete Button */}
             </Grid>
           </Grid>
         </CardContent>
