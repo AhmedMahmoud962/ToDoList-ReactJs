@@ -48,7 +48,7 @@ function Todo({ todoItem }) {
   // Confirm Delete
   const HandleDeleteConfirm = () => {
     setShowDeleteModel(false);
-    const updatedTodos = todo.filter((t) => t.id !== todoItem.id);
+    const updatedTodos = todo.filter((t) => t.id !== todoItem.id );
     setTodo(updatedTodos);
   }
   // Handle Function calls
@@ -70,7 +70,7 @@ function Todo({ todoItem }) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button>No</Button>
+          <Button onClick={handleClose}>No</Button>
           <Button style={{ color: "red" }} autoFocus onClick={HandleDeleteConfirm}>Yes</Button>
         </DialogActions>
       </Dialog>
