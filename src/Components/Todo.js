@@ -112,7 +112,7 @@ function Todo({ todoItem }) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteDialogClose}>No</Button>
+          <Button onClick={handleDeleteDialogClose}>Cancel</Button>
           <Button
             style={{ color: "red" }}
             onClick={HandleDeleteConfirm}
