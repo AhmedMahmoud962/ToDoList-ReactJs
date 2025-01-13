@@ -7,31 +7,74 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { TodoContext } from "../Context/TodoContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Model Delete
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import Button from "@mui/material/Button";
+import DialogTitle from "@mui/material/DialogTitle";
 function Todo({ todoItem }) {
   const { todo, setTodo } = useContext(TodoContext);
+  const [showDeleteModel, setShowDeleteModel] = useState(false);
 
+  // Event Handleres 
+  // Handle check
   const handleCheckButton = () => {
     const updatedTodos = todo.map((t) => {
       if (t.id === todoItem.id) {
         t.isCompleted = !t.isCompleted;
         toast.success(
-          t.isCompleted
-            ? ` Task marked as completed!`
-            : ` Task not complete!`
+          t.isCompleted ? `Task marked as completed!` : `Task not complete!`
         );
       }
       return t;
     });
     setTodo(updatedTodos);
   };
+  // Event Handleres 
+  const HandleDeleteButton = () => {
+    setShowDeleteModel(true);
+  }
+  const handleClose = () => {
+    setShowDeleteModel(false);
+  }
 
+  // Confirm Delete
+  const HandleDeleteConfirm = () => {
+    setShowDeleteModel(false);
+    const updatedTodos = todo.filter((t) => t.id !== todoItem.id);
+    setTodo(updatedTodos);
+  }
+  // Handle Function calls
   return (
     <>
+      {/* Model Delete */}
+      <Dialog
+        open={showDeleteModel}
+        onClose={handleClose} // for close model when click in any place in document
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure you want to delete this task ?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You can't undo this action unless you have permission to do so and have the required permissions to do so.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button>No</Button>
+          <Button style={{ color: "red" }} autoFocus onClick={HandleDeleteConfirm}>Yes</Button>
+        </DialogActions>
+      </Dialog>
+      {/* Model Delete */}
       <Card
         className="todoCard"
         sx={{
@@ -81,7 +124,9 @@ function Todo({ todoItem }) {
               >
                 <ModeEditOutlineOutlinedIcon />
               </IconButton>
+              {/*  Delete Button */}
               <IconButton
+                onClick={HandleDeleteButton}
                 className="iconButton"
                 aria-label="delete"
                 style={{
@@ -92,6 +137,7 @@ function Todo({ todoItem }) {
               >
                 <DeleteOutlineOutlinedIcon />
               </IconButton>
+              {/*  Delete Button */}
             </Grid>
           </Grid>
         </CardContent>
