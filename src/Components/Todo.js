@@ -162,7 +162,7 @@ function Todo({ todoItem }) {
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={8}>
-              <Typography variant="h5" sx={{ textAlign: "left" }}>
+              <Typography variant="h5" sx={{ textAlign: "left" ,  textDecoration: todo.isCompleted ? "line-through" : "none", }}>
                 {todoItem.title}
               </Typography>
               <Typography variant="h6" sx={{ textAlign: "left" }}>
