@@ -8,31 +8,73 @@ import Todo from "./Todo";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { TodoContext } from "../Context/TodoContext";
 // uuid
 import { v4 as uuidv4 } from "uuid";
-import { useContext } from "react";
-import { TodoContext } from "../Context/TodoContext";
 
 function ToDoList() {
   const { todo, setTodo } = useContext(TodoContext);
-  const [titleInput, setTitleInput] = useState("");
 
-  const handleAddClick = () => {
+  const [titleInput, setTitleInput] = useState("");
+  const [displayedTodosType, setDisplayedTodosType] = useState("all");
+
+  // filteration arrays
+  const completedTodos = todo.filter((t) => {
+    return t.isCompleted;
+  });
+
+  const notCompletedTodos = todo.filter((t) => {
+    return !t.isCompleted;
+  });
+
+  let todosToBeRendered = todo;
+
+  if (displayedTodosType == "completed") {
+    todosToBeRendered = completedTodos;
+  } else if (displayedTodosType == "non-completed") {
+    todosToBeRendered = notCompletedTodos;
+  } else {
+    todosToBeRendered = todo;
+  }
+
+  const todosJsx = todosToBeRendered.map((t) => {
+    return <Todo key={t.id} todo={t} />;
+  });
+
+  useEffect(() => {
+    console.log("calling use effect");
+    const storageTodos = JSON.parse(localStorage.getItem("todos")) ?? [];
+    setTodo(storageTodos);
+  }, []);
+
+  function changeDisplayedType(e) {
+    setDisplayedTodosType(e.target.value);
+  }
+  function handleAddClick() {
     const newTodo = {
       id: uuidv4(),
       title: titleInput,
-      description: "",
+      details: "",
       isCompleted: false,
     };
-    if (newTodo.title === "") return;
-    setTodo([...todo, newTodo]);
-    setTitleInput("");
-  };
 
+    const updatedTodos = [...todo, newTodo];
+    setTodo(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    setTitleInput("");
+  }
   const todoJsx = todo.map((t) => {
-    return <Todo key={t.id} todoItem={t}  />;
+    return (
+      <Todo
+        key={t.id}
+        todoItem={t}
+        // onUpdate={handleUpdate}
+        // onDelete={handleDelete}
+      />
+    );
   });
+
   return (
     <Container maxWidth="sm">
       <Card sx={{ minWidth: 275 }}>
@@ -41,9 +83,7 @@ function ToDoList() {
           <Divider />
           {/* filter buttons */}
           <ToggleButtonGroup
-            // value={alignment}
             exclusive
-            // onChange={handleAlignment}
             aria-label="text alignment"
             style={{ marginTop: "20px" }}
           >

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -7,12 +7,6 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { useContext, useState } from "react";
-import { TodoContext } from "../Context/TodoContext";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-// Model Delete
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -20,104 +14,102 @@ import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { TodoContext } from "../Context/TodoContext";
+
 function Todo({ todoItem }) {
   const { todo, setTodo } = useContext(TodoContext);
-  const [showDeleteModel, setShowDeleteModel] = useState(false);
-  const [showUpdateModel, setShowUpdateModel] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(todoItem.title);
-  const [editedDescription, setEditedDescription] = useState(
-    todoItem.description
-  );
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [updatedTodo, setUpdatedTodo] = useState({
+    title: todoItem.title,
+    details: todoItem.description,
+  });
 
   // Event Handlers
-  const handleCheckButton = () => {
+  const handleCheckClick = () => {
     const updatedTodos = todo.map((t) => {
       if (t.id === todoItem.id) {
         t.isCompleted = !t.isCompleted;
         toast.success(
-          t.isCompleted ? `Task marked as completed!` : `Task not complete!`
+          t.isCompleted ? "Task marked as completed!" : "Task marked as incomplete!"
         );
       }
       return t;
     });
     setTodo(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
-  const HandleDeleteButton = () => {
-    setShowDeleteModel(true);
+/*************  ✨ Codeium Command ⭐  *************/
+  /**
+   * Sets showDeleteDialog to true, which displays the dialog allowing the user
+   * to confirm or cancel the deletion of a task.
+   */
+/******  c13eda7b-59bc-4fd2-954d-ecc9aeac516d  *******/
+  const handleDeleteClick = () => {
+    setShowDeleteDialog(true);
+  };
+
+  const handleUpdateClick = () => {
+    setShowUpdateDialog(true);
   };
 
   const handleDeleteDialogClose = () => {
-    setShowDeleteModel(false);
+    setShowDeleteDialog(false);
   };
 
   const handleUpdateDialogClose = () => {
-    setShowUpdateModel(false);
+    setShowUpdateDialog(false);
   };
 
-  const HandleDeleteConfirm = () => {
-    setShowDeleteModel(false);
+  const handleDeleteConfirm = () => {
     const updatedTodos = todo.filter((t) => t.id !== todoItem.id);
-    if (updatedTodos.length === todo.length) {
-      toast.error("Task not deleted!");
-    } else {
-      toast.success("Task deleted successfully!");
-      setTodo(updatedTodos);
-    }
-  };
-
-  const handleEditButton = () => {
-    setEditedTitle(todoItem.title);
-    setEditedDescription(todoItem.description);
-    setShowUpdateModel(true);
+    setTodo(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    toast.success("Task deleted successfully!");
+    setShowDeleteDialog(false);
   };
 
   const handleUpdateConfirm = () => {
-    if (!editedTitle.trim() || !editedDescription.trim()) {
+    if (!updatedTodo.title.trim() || !updatedTodo.details.trim()) {
       toast.error("Both title and description are required!");
       return;
     }
 
     const updatedTodos = todo.map((t) => {
       if (t.id === todoItem.id) {
-        return {
-          ...t,
-          title: editedTitle.trim(),
-          description: editedDescription.trim(),
-        };
+        return { ...t, title: updatedTodo.title, description: updatedTodo.details };
       }
       return t;
     });
 
     setTodo(updatedTodos);
-    setShowUpdateModel(false);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
     toast.success("Task updated successfully!");
+    setShowUpdateDialog(false);
   };
 
   return (
     <>
       {/* Delete Dialog */}
       <Dialog
-        open={showDeleteModel}
+        open={showDeleteDialog}
         onClose={handleDeleteDialogClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        aria-labelledby="delete-dialog-title"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Are you sure you want to delete this task?"}
+        <DialogTitle id="delete-dialog-title">
+          Are you sure you want to delete this task?
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            You can't undo this action.
+          <DialogContentText>
+            This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose}>Cancel</Button>
-          <Button
-            style={{ color: "red" }}
-            onClick={HandleDeleteConfirm}
-            autoFocus
-          >
+          <Button onClick={handleDeleteConfirm} style={{ color: "red" }} autoFocus>
             Yes, Delete it
           </Button>
         </DialogActions>
@@ -125,12 +117,11 @@ function Todo({ todoItem }) {
 
       {/* Update Dialog */}
       <Dialog
-        open={showUpdateModel}
+        open={showUpdateDialog}
         onClose={handleUpdateDialogClose}
-        aria-labelledby="edit-dialog-title"
-        aria-describedby="edit-dialog-description"
+        aria-labelledby="update-dialog-title"
       >
-        <DialogTitle id="edit-dialog-title">Edit Task</DialogTitle>
+        <DialogTitle id="update-dialog-title">Edit Task</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -141,19 +132,19 @@ function Todo({ todoItem }) {
             type="text"
             fullWidth
             variant="standard"
-            value={editedTitle}
-            onChange={(e) => setEditedTitle(e.target.value)}
+            value={updatedTodo.title}
+            onChange={(e) => setUpdatedTodo({ ...updatedTodo, title: e.target.value })}
           />
           <TextField
             required
             margin="dense"
-            id="description"
+            id="details"
             label="Task Description"
             type="text"
             fullWidth
             variant="standard"
-            value={editedDescription}
-            onChange={(e) => setEditedDescription(e.target.value)}
+            value={updatedTodo.details}
+            onChange={(e) => setUpdatedTodo({ ...updatedTodo, details: e.target.value })}
           />
         </DialogContent>
         <DialogActions>
@@ -192,8 +183,7 @@ function Todo({ todoItem }) {
               alignItems="center"
             >
               <IconButton
-                onClick={handleCheckButton}
-                className="iconButton"
+                onClick={handleCheckClick}
                 aria-label="check"
                 style={{
                   color: todoItem.isCompleted ? "white" : "#8bc34a",
@@ -204,8 +194,7 @@ function Todo({ todoItem }) {
                 <CheckIcon />
               </IconButton>
               <IconButton
-                onClick={handleEditButton}
-                className="iconButton"
+                onClick={handleUpdateClick}
                 aria-label="edit"
                 style={{
                   color: "#1769aa",
@@ -216,8 +205,7 @@ function Todo({ todoItem }) {
                 <ModeEditOutlineOutlinedIcon />
               </IconButton>
               <IconButton
-                onClick={HandleDeleteButton}
-                className="iconButton"
+                onClick={handleDeleteClick}
                 aria-label="delete"
                 style={{
                   color: "#b23c17",
