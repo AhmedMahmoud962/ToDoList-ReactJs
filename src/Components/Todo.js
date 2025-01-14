@@ -42,12 +42,6 @@ function Todo({ todoItem }) {
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
-/*************  ✨ Codeium Command ⭐  *************/
-  /**
-   * Sets showDeleteDialog to true, which displays the dialog allowing the user
-   * to confirm or cancel the deletion of a task.
-   */
-/******  c13eda7b-59bc-4fd2-954d-ecc9aeac516d  *******/
   const handleDeleteClick = () => {
     setShowDeleteDialog(true);
   };

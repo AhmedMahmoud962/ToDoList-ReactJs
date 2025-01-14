@@ -77,7 +77,7 @@ function ToDoList() {
 
   return (
     <Container maxWidth="sm">
-      <Card sx={{ minWidth: 275 }}>
+      <Card sx={{ minWidth: 275 }} style={{ maxHeight: "90vh", overflow: "scroll" }}>
         <CardContent>
           <Typography variant="h3"> My Tasks </Typography>
           <Divider />
@@ -86,10 +86,13 @@ function ToDoList() {
             exclusive
             aria-label="text alignment"
             style={{ marginTop: "20px" }}
+            value={displayedTodosType}
+            onChange={changeDisplayedType}
+            color="primary"
           >
-            <ToggleButton value="left">All</ToggleButton>
-            <ToggleButton value="center">Done</ToggleButton>
-            <ToggleButton value="right">Not completed</ToggleButton>
+            <ToggleButton value="all">All</ToggleButton>
+            <ToggleButton value="completed">Done</ToggleButton>
+            <ToggleButton value="not-completed">Not completed</ToggleButton>
           </ToggleButtonGroup>
           {/* filter buttons */}
 
@@ -118,6 +121,7 @@ function ToDoList() {
                 onClick={() => {
                   handleAddClick();
                 }}
+                disabled={titleInput.length === 0}
               >
                 Add Task
               </Button>

@@ -1,9 +1,21 @@
 import "./App.css";
 import ToDoList from "./Components/ToDoList.js";
 import { TodoContext } from "./Context/TodoContext.js";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 function App() {
+  const theme = createTheme({
+    typography: {
+      // fontFamily: ["Alexandria"],
+    },
+
+    palette: {
+      primary: {
+        main: "#dd2c00",
+      },
+    },
+  });
   const initialTodo = [
     {
       id: uuidv4(),
@@ -26,13 +38,22 @@ function App() {
   ];
   const [todo, setTodo] = useState(initialTodo);
   return (
-    <div className="App">
-      {/* <TodoContext.Provider value={{ todo: todo, setTodo: setTodo }}> */}
-      {/* If the will named as "todo" and "setTodo" then we can use like this  */}
-      <TodoContext.Provider value={{ todo, setTodo }}>
-        <ToDoList />
-      </TodoContext.Provider>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div
+        className="App"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background: "#191b1f",
+          height: "100vh",
+        }}
+      >
+        <TodoContext.Provider value={{ todo, setTodo }}>
+          <ToDoList />
+        </TodoContext.Provider>
+      </div>
+    </ThemeProvider>
   );
 }
 
