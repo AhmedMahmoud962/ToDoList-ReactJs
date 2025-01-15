@@ -10,47 +10,41 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState, useContext, useEffect } from "react";
 import { TodoContext } from "../Context/TodoContext";
-// uuid
 import { v4 as uuidv4 } from "uuid";
 
 function ToDoList() {
   const { todo, setTodo } = useContext(TodoContext);
-
   const [titleInput, setTitleInput] = useState("");
   const [displayedTodosType, setDisplayedTodosType] = useState("all");
 
-  // filteration arrays
-  const completedTodos = todo.filter((t) => {
-    return t.isCompleted;
-  });
+  // Filter todos based on completion status
+  const completedTodos = todo.filter((t) => t.isCompleted);
+  const notCompletedTodos = todo.filter((t) => !t.isCompleted);
 
-  const notCompletedTodos = todo.filter((t) => {
-    return !t.isCompleted;
-  });
-
+  // Determine which todos to render
   let todosToBeRendered = todo;
-
-  if (displayedTodosType == "completed") {
+  if (displayedTodosType === "completed") {
     todosToBeRendered = completedTodos;
-  } else if (displayedTodosType == "non-completed") {
+  } else if (displayedTodosType === "not-completed") {
     todosToBeRendered = notCompletedTodos;
-  } else {
-    todosToBeRendered = todo;
   }
 
-  const todosJsx = todosToBeRendered.map((t) => {
-    return <Todo key={t.id} todo={t} />;
-  });
+  const todosJsx = todosToBeRendered.map((t) => <Todo key={t.id} todoItem={t} />);
 
+  // Load todos from localStorage on initial render
   useEffect(() => {
-    console.log("calling use effect");
     const storageTodos = JSON.parse(localStorage.getItem("todos")) ?? [];
     setTodo(storageTodos);
-  }, []);
+  }, [setTodo]);
 
-  function changeDisplayedType(e) {
-    setDisplayedTodosType(e.target.value);
+  // Handle filter button change
+  function changeDisplayedType(e, newType) {
+    if (newType !== null) {
+      setDisplayedTodosType(newType);
+    }
   }
+
+  // Handle adding a new task
   function handleAddClick() {
     const newTodo = {
       id: uuidv4(),
@@ -64,24 +58,15 @@ function ToDoList() {
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
     setTitleInput("");
   }
-  const todoJsx = todo.map((t) => {
-    return (
-      <Todo
-        key={t.id}
-        todoItem={t}
-        // onUpdate={handleUpdate}
-        // onDelete={handleDelete}
-      />
-    );
-  });
 
   return (
     <Container maxWidth="sm">
-      <Card sx={{ minWidth: 275 }} style={{ maxHeight: "90vh", overflow: "scroll" }}>
+      <Card sx={{ minWidth: 275 }} style={{ maxHeight: "90vh", overflow: "auto" }}>
         <CardContent>
           <Typography variant="h3"> My Tasks </Typography>
           <Divider />
-          {/* filter buttons */}
+
+          {/* Filter buttons */}
           <ToggleButtonGroup
             exclusive
             aria-label="text alignment"
@@ -94,13 +79,11 @@ function ToDoList() {
             <ToggleButton value="completed">Done</ToggleButton>
             <ToggleButton value="not-completed">Not completed</ToggleButton>
           </ToggleButtonGroup>
-          {/* filter buttons */}
 
-          {/* ToDos */}
-          {todoJsx}
-          {/* ToDos */}
+          {/* Render Todos */}
+          {todosJsx}
 
-          {/* input + BUTTON */}
+          {/* Input and Add Button */}
           <Grid container spacing={2} style={{ marginTop: "20px" }}>
             <Grid item xs={8}>
               <TextField
@@ -109,25 +92,20 @@ function ToDoList() {
                 label="New Task"
                 variant="outlined"
                 value={titleInput}
-                onChange={(e) => {
-                  setTitleInput(e.target.value);
-                }}
+                onChange={(e) => setTitleInput(e.target.value)}
               />
             </Grid>
             <Grid item xs={4}>
               <Button
                 variant="contained"
                 style={{ width: "100%", height: "100%" }}
-                onClick={() => {
-                  handleAddClick();
-                }}
-                disabled={titleInput.length === 0}
+                onClick={handleAddClick}
+                disabled={titleInput.trim().length === 0}
               >
                 Add Task
               </Button>
             </Grid>
           </Grid>
-          {/* input + BUTTON */}
         </CardContent>
       </Card>
     </Container>
