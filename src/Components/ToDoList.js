@@ -8,18 +8,25 @@ import Todo from "./Todo";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 import { TodoContext } from "../Context/TodoContext";
 import { v4 as uuidv4 } from "uuid";
 
 function ToDoList() {
+  // console.log("re rendering ToDoList");
   const { todo, setTodo } = useContext(TodoContext);
   const [titleInput, setTitleInput] = useState("");
   const [displayedTodosType, setDisplayedTodosType] = useState("all");
 
   // Filter todos based on completion status
-  const completedTodos = todo.filter((t) => t.isCompleted);
-  const notCompletedTodos = todo.filter((t) => !t.isCompleted);
+  const completedTodos = useMemo(() => {
+    console.log("Filtering completed todos");
+    return todo.filter((t) => t.isCompleted);
+  }, [todo]);
+  const notCompletedTodos = useMemo(() => {
+    console.log("Filtering not completed todos");
+    return todo.filter((t) => !t.isCompleted);
+  }, [todo]);
 
   // Determine which todos to render
   let todosToBeRendered = todo;
@@ -29,7 +36,9 @@ function ToDoList() {
     todosToBeRendered = notCompletedTodos;
   }
 
-  const todosJsx = todosToBeRendered.map((t) => <Todo key={t.id} todoItem={t} />);
+  const todosJsx = todosToBeRendered.map((t) => (
+    <Todo key={t.id} todoItem={t} />
+  ));
 
   // Load todos from localStorage on initial render
   useEffect(() => {
@@ -61,7 +70,10 @@ function ToDoList() {
 
   return (
     <Container maxWidth="sm">
-      <Card sx={{ minWidth: 275 }} style={{ maxHeight: "90vh", overflow: "auto" }}>
+      <Card
+        sx={{ minWidth: 275 }}
+        style={{ maxHeight: "90vh", overflow: "auto" }}
+      >
         <CardContent>
           <Typography variant="h3"> My Tasks </Typography>
           <Divider />
