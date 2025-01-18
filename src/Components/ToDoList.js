@@ -10,6 +10,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState, useContext, useEffect, useMemo } from "react";
 import { TodoContext } from "../Context/TodoContext";
+import { ToastContext } from "../Context/ToastContext";
 import { v4 as uuidv4 } from "uuid";
 
 function ToDoList() {
@@ -17,7 +18,7 @@ function ToDoList() {
   const { todo, setTodo } = useContext(TodoContext);
   const [titleInput, setTitleInput] = useState("");
   const [displayedTodosType, setDisplayedTodosType] = useState("all");
-
+  const { HideShowToast } = useContext(ToastContext);
   // Filter todos based on completion status
   const completedTodos = useMemo(() => {
     console.log("Filtering completed todos");
@@ -66,6 +67,7 @@ function ToDoList() {
     setTodo(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
     setTitleInput("");
+    HideShowToast( "Task Added Successfully" ); 
   }
 
   return (

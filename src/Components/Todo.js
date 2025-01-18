@@ -14,9 +14,10 @@ import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 import { TodoContext } from "../Context/TodoContext";
+import { ToastContext } from "../Context/ToastContext";
 
 function Todo({ todoItem }) {
   const { todo, setTodo } = useContext(TodoContext);
@@ -26,20 +27,19 @@ function Todo({ todoItem }) {
     title: todoItem.title,
     details: todoItem.description,
   });
-
+  const { HideShowToast } = useContext(ToastContext);
   // Event Handlers
   const handleCheckClick = () => {
     const updatedTodos = todo.map((t) => {
       if (t.id === todoItem.id) {
         t.isCompleted = !t.isCompleted;
-        toast.success(
-          t.isCompleted ? "Task marked as completed!" : "Task marked as incomplete!"
-        );
+        
       }
       return t;
     });
     setTodo(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    HideShowToast("Task updated successfully!");
   };
 
   const handleDeleteClick = () => {
@@ -62,13 +62,14 @@ function Todo({ todoItem }) {
     const updatedTodos = todo.filter((t) => t.id !== todoItem.id);
     setTodo(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
-    toast.success("Task deleted successfully!");
+    
     setShowDeleteDialog(false);
+    HideShowToast("Task deleted successfully!");
   };
 
   const handleUpdateConfirm = () => {
     if (!updatedTodo.title.trim() || !updatedTodo.details.trim()) {
-      toast.error("Both title and description are required!");
+      
       return;
     }
 
@@ -81,8 +82,9 @@ function Todo({ todoItem }) {
 
     setTodo(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
-    toast.success("Task updated successfully!");
+    
     setShowUpdateDialog(false);
+    HideShowToast("Task Edit successfully!");
   };
 
   return (
@@ -213,7 +215,7 @@ function Todo({ todoItem }) {
           </Grid>
         </CardContent>
       </Card>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </>
   );
 }
