@@ -17,7 +17,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 // import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 import { TodoContext } from "../Context/TodoContext";
-import { ToastContext } from "../Context/ToastContext";
+import {  useToast } from "../Context/ToastContext";
 
 function Todo({ todoItem }) {
   const { todo, setTodo } = useContext(TodoContext);
@@ -27,7 +27,7 @@ function Todo({ todoItem }) {
     title: todoItem.title,
     details: todoItem.description,
   });
-  const { HideShowToast } = useContext(ToastContext);
+  const { HideShowToast } = useToast();
   // Event Handlers
   const handleCheckClick = () => {
     const updatedTodos = todo.map((t) => {
