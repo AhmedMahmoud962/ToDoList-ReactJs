@@ -17,7 +17,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 // import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 import { TodoContext } from "../Context/TodoContext";
-import {  useToast } from "../Context/ToastContext";
+import { useToast } from "../Context/ToastContext";
 
 function Todo({ todoItem }) {
   const { todo, setTodo } = useContext(TodoContext);
@@ -33,7 +33,6 @@ function Todo({ todoItem }) {
     const updatedTodos = todo.map((t) => {
       if (t.id === todoItem.id) {
         t.isCompleted = !t.isCompleted;
-        
       }
       return t;
     });
@@ -62,27 +61,30 @@ function Todo({ todoItem }) {
     const updatedTodos = todo.filter((t) => t.id !== todoItem.id);
     setTodo(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
-    
+
     setShowDeleteDialog(false);
     HideShowToast("Task deleted successfully!");
   };
 
   const handleUpdateConfirm = () => {
     if (!updatedTodo.title.trim() || !updatedTodo.details.trim()) {
-      
       return;
     }
 
     const updatedTodos = todo.map((t) => {
       if (t.id === todoItem.id) {
-        return { ...t, title: updatedTodo.title, description: updatedTodo.details };
+        return {
+          ...t,
+          title: updatedTodo.title,
+          description: updatedTodo.details,
+        };
       }
       return t;
     });
 
     setTodo(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
-    
+
     setShowUpdateDialog(false);
     HideShowToast("Task Edit successfully!");
   };
@@ -99,13 +101,15 @@ function Todo({ todoItem }) {
           Are you sure you want to delete this task?
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            This action cannot be undone.
-          </DialogContentText>
+          <DialogContentText>This action cannot be undone.</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose}>Cancel</Button>
-          <Button onClick={handleDeleteConfirm} style={{ color: "red" }} autoFocus>
+          <Button
+            onClick={handleDeleteConfirm}
+            style={{ color: "red" }}
+            autoFocus
+          >
             Yes, Delete it
           </Button>
         </DialogActions>
@@ -129,7 +133,9 @@ function Todo({ todoItem }) {
             fullWidth
             variant="standard"
             value={updatedTodo.title}
-            onChange={(e) => setUpdatedTodo({ ...updatedTodo, title: e.target.value })}
+            onChange={(e) =>
+              setUpdatedTodo({ ...updatedTodo, title: e.target.value })
+            }
           />
           <TextField
             required
@@ -140,7 +146,9 @@ function Todo({ todoItem }) {
             fullWidth
             variant="standard"
             value={updatedTodo.details}
-            onChange={(e) => setUpdatedTodo({ ...updatedTodo, details: e.target.value })}
+            onChange={(e) =>
+              setUpdatedTodo({ ...updatedTodo, details: e.target.value })
+            }
           />
         </DialogContent>
         <DialogActions>
@@ -164,7 +172,15 @@ function Todo({ todoItem }) {
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={8}>
-              <Typography variant="h5" sx={{ textAlign: "left" ,  textDecoration: todoItem.isCompleted ? "line-through" : "none"}}>
+              <Typography
+                variant="h5"
+                sx={{
+                  textAlign: "left",
+                  textDecoration: todoItem.isCompleted
+                    ? "line-through"
+                    : "none",
+                }}
+              >
                 {todoItem.title}
               </Typography>
               <Typography variant="h6" sx={{ textAlign: "left" }}>
@@ -186,6 +202,7 @@ function Todo({ todoItem }) {
                   background: todoItem.isCompleted ? "#8bc34a" : "white",
                   border: "2px solid #8bc34a",
                 }}
+                sx={{ padding: "5px" }}
               >
                 <CheckIcon />
               </IconButton>
@@ -197,6 +214,7 @@ function Todo({ todoItem }) {
                   background: "white",
                   border: "2px solid #1769aa",
                 }}
+                sx={{ padding: "5px" }}
               >
                 <ModeEditOutlineOutlinedIcon />
               </IconButton>
@@ -208,6 +226,7 @@ function Todo({ todoItem }) {
                   background: "white",
                   border: "2px solid #b23c17",
                 }}
+                sx={{ padding: "5px" }}
               >
                 <DeleteOutlineOutlinedIcon />
               </IconButton>
